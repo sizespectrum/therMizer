@@ -1,4 +1,20 @@
-realm_names <- c("upper50m","bottom","DVM_day","DVM_night")
+#' Vertical integration functions
+#'
+
+
+#' @title set verticality
+#'
+#' @description set different species specifc realms with different temperatures
+#'
+#' @param params mizer params object
+#' @param real_names A character vector containing the names of the
+#' different realms to create.
+#'
+#' @export
+#'
+
+setVerticality <- function(params, realm_names){
+# realm_names <- c("upper50m","bottom","DVM_day","DVM_night")
 species_names <- as.character(params@species_params$species)
 sizes <- params@w
 
@@ -23,7 +39,7 @@ vertical_migration_array[DVMn, spB, ] <- 0.5
 # And check that all filled size classes sum to 1, no more and no less
 for (s in seq(1,length(species_names),1)) {
   if (!all(apply(vertical_migration_array[ , s, ],2,sum) == 1)) {
-    stop(paste("Your realm allocations for ", species_names[s], " don't sum to 1 for all sizes. 
+    stop(paste("Your realm allocations for ", species_names[s], " don't sum to 1 for all sizes.
 		Their time in a given realm is either over- or under-allocated.", sep = ""))
   }
 }
@@ -42,3 +58,5 @@ for (r in seq(1,length(realm_names),1)) {
 
 other_params(params)$exposure <- exposure_array
 
+return(params)
+}
