@@ -4,13 +4,15 @@
 \alias{setVerticality}
 \title{set verticality}
 \usage{
-setVerticality(params, realm_names)
+setVerticality(params, vertical_migration_array)
 }
 \arguments{
-\item{params}{mizer params object}
+\item{params}{A mizer params object}
 
-\item{real_names}{A character vector containing the names of the
-different realms to create.}
+\item{vertical_migration_array}{An array of number of realms x number of species x number of sizes
+filled with the time ratio of each species spending in each realms.
+Values must be positive and the sum of every realms per species per size must
+be one}
 }
 \description{
 set different species specifc realms with different temperatures

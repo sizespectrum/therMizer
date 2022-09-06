@@ -27,11 +27,15 @@
 #' @param params A mizer params object
 #' @param ocean_temp_array An array of temperatures
 #' @param n_pp_array An array of plankton forcing
-#' @param realm_names A character vector for realms names
+#' @param vertical_migration_array An array of number of realms x number of species x number of sizes
+#' filled with the time ratio of each species spending in each realms.
+#' Values must be positive and the sum of every realms per species per size must
+#' be one
 #'
 #' @export
 
-upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_temp_array = NULL, n_pp_array = NULL, realm_names = NULL){
+upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_temp_array = NULL,
+                              n_pp_array = NULL, vertical_migration_array = NULL){
 
   if(is.null(temp_min)){
     if(is.null(species_params(params)$temp_min)) stop("You need to setup min temperature for your species")
@@ -48,13 +52,12 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_te
   params <- setMetabTher(params)
 
   if(!is.null(ocean_temp_array)) other_params(params)$ocean_temp <- ocean_temp_array
-  if(!is.null(plankton_forcing)){
+  if(!is.null(n_pp_array)){
     # params <- setResource(params, resource_dynamics = "plankton_forcing")
     other_params(params)$n_pp_array <- n_pp_array
   }
-  realm_names <- c("upper50m","bottom","DVM_day","DVM_night")
 
-  if(!is.null(real_names)) params <- setVerticality(params, real_names)
+  if(!is.null(vertical_migration_array)) params <- setVerticality(params, vertical_migration_array)
 
   params <- setRateFunction(params, "Encounter", "therMizerEncounter")
   params <- setRateFunction(params, "PredRate", "therMizerPredRate")

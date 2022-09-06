@@ -18,6 +18,16 @@ therMizerEncounter <- function(params, t, ...) {
 
 }
 
+
+#' @title therMizerPredRate
+#'
+#' @description bla
+#'
+#' @param params mizer object
+#' @param t time
+#'
+#' @export
+
 # Because temperature effect can vary by predator size, we need to insert the temperature scaling into the mizerPredRate function.  This code is the same as that from the mizer github page (24 Aug 22), just with the scaling added in.
 therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
   no_sp <- dim(params@interaction)[1]

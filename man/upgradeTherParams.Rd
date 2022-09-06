@@ -6,9 +6,11 @@
 \usage{
 upgradeTherParams(
   params,
+  temp_min = NULL,
+  temp_max = NULL,
   ocean_temp_array = NULL,
   n_pp_array = NULL,
-  realm_names = NULL
+  vertical_migration_array = NULL
 )
 }
 \arguments{
@@ -18,7 +20,10 @@ upgradeTherParams(
 
 \item{n_pp_array}{An array of plankton forcing}
 
-\item{realm_names}{A character vector for realms names}
+\item{vertical_migration_array}{An array of number of realms x number of species x number of sizes
+filled with the time ratio of each species spending in each realms.
+Values must be positive and the sum of every realms per species per size must
+be one}
 }
 \description{
 Wrapper function making a mizer params object
