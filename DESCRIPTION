@@ -6,7 +6,20 @@ Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
 Encoding: UTF-8
+License: GPL-3
 LazyData: true
+Depends:
+    R (>= 3.1),
+    mizer (>= 2.3.0)
+Imports:
+    assertthat,
+    bslib,
+    dplyr,
+    ggplot2
+Collate:
+  rates.R
+  realms.R
+  scale_temp_effect.R
+  therParams.R
 RoxygenNote: 7.2.1
