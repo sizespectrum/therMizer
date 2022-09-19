@@ -14,7 +14,7 @@ therMizerEncounter <- function(params, t, ...) {
   max_encounter <- mizerEncounter(params, t, ...)
 
   # Apply temperature effect
-  return(max_encounter * scaled_temp_effect(t))
+  return(max_encounter * scaled_temp_effect(params,t))
 
 }
 
@@ -44,7 +44,7 @@ therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
                          n_total_in_size_bins,
                        "*", check.margin = FALSE)
 
-    pred_rate <- pred_rate * scaled_temp_effect(t)
+    pred_rate <- pred_rate * scaled_temp_effect(params, t)
 
     # integrate over all predator sizes
     pred_rate <- colSums(aperm(pred_rate, c(2, 1, 3)), dims = 1)
@@ -62,7 +62,7 @@ therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
   Q[, idx_sp] <- sweep( (1 - feeding_level) * params@search_vol * n, 2,
                         params@dw, "*")
 
-  Q[, idx_sp] <- Q[, idx_sp] * scaled_temp_effect(t)
+  Q[, idx_sp] <- Q[, idx_sp] * scaled_temp_effect(params, t)
 
   # We do our spectral integration in parallel over the different species
   pred_rate <- Re(base::t(mvfft(base::t(params@ft_pred_kernel_p) *
