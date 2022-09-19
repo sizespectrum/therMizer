@@ -17,7 +17,9 @@ setEncounterPredScale <- function(params){
     temperature <- seq(species_params(params)$temp_min[indv], species_params(params)$temp_max[indv], by = 0.1) + 273
 
     # Find the maximum value of the unscaled effect of temperature on encounter and predation rate for each species
-    species_params(params)$encounterpred_scale[indv] <- max((temperature) * (temperature - (species_params(params)$temp_min[indv] + 273)) * ((species_params(params)$temp_max[indv] + 273) - temperature)^(1/2))
+    species_params(params)$encounterpred_scale[indv] <-
+      max((temperature) * (temperature - (species_params(params)$temp_min[indv] + 273)) *
+            ((species_params(params)$temp_max[indv] + 273) - temperature)^(1/2))
 
   }
   return(params)
