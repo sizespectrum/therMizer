@@ -64,7 +64,10 @@ species_names <- as.character(params_Temp@species_params$species)
 sizes <- params_Temp@w
 
 # Create the vertical migration array and fill it
-vertical_migration_array <- array(0, dim = (c(length(realm_names), length(species_names), length(sizes))), dimnames = list(realm = realm_names, sp = species_names, w = signif(sizes,3))) # realm x species x size
+vertical_migration_array <- array(0, dim = (c(length(realm_names), 
+                                  length(species_names), length(sizes))), 
+                                  dimnames = list(realm = realm_names, sp = species_names, 
+                                  w = signif(sizes,3))) # realm x species x size
 
 upp <- which(realm_names == "upper50m") # 0 - 50m average
 btm <- which(realm_names == "bottom") # sea floor
@@ -87,7 +90,8 @@ vertical_migration_array[DVMn, spB, ] <- 0.5
 Using the same scenario, here's an example to set up the `exposure` array.
 
 ``` r
-exposure_array <- array(0, dim = (c(length(realm_names), length(species_names))), dimnames = list(realm = realm_names, sp = species_names)) # realm x species
+exposure_array <- array(0, dim = (c(length(realm_names), length(species_names))), 
+                  dimnames = list(realm = realm_names, sp = species_names)) # realm x species
 
 for (r in seq(1,length(realm_names),1)) {
     for (s in seq(1,length(species_names),1)) {
@@ -103,7 +107,8 @@ An example for creating the temperatures for each realm.
 ``` r
 # Create temperature array and fill it
 times <- 0:500
-ocean_temp_array <- array(NA, dim = c(length(times), length(realm_names)), dimnames = list(time = times, realm = realm_names))
+ocean_temp_array <- array(NA, dim = c(length(times), length(realm_names)), 
+                    dimnames = list(time = times, realm = realm_names))
 temp_inc <- 0
 for (i in 1:501) {
   ocean_temp_array[i,] <- c(-4 + temp_inc, -1 + temp_inc, 11 + temp_inc, 14 + temp_inc)
@@ -116,7 +121,8 @@ for (i in 1:501) {
 The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above.
 
 ```r
-paramsTemp <- upgradeTherParams(paramsTemp, temp_min, temp_max, ocean_temp_array, vertical_migration_array, exposure_array)
+paramsTemp <- upgradeTherParams(paramsTemp, temp_min, temp_max, ocean_temp_array, 
+                                vertical_migration_array, exposure_array)
 
 sim <- project(paramsTemp)
 
