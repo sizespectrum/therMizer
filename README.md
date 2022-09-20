@@ -8,6 +8,7 @@ The `remotes` package is needed to install packages hosted on GitHub.
 
 ``` r
 install.packages("remotes")
+
 remotes::install_github("sizespectrum/therMizer")
 ```
 
@@ -112,11 +113,20 @@ for (i in 1:501) {
 
 ## Running a scenario
 
+The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above.
+
+```r
+paramsTemp <- upgradeTherParams(paramsTemp, temp_min, temp_max, ocean_temp_array, vertical_migration_array, exposure_array)
+
+sim <- project(paramsTemp)
+
+```
+
+The `plotThermPerformance` function displays the shape of the thermal performance curves for each species.
+
 ```r
 
-params <- upgradeTherParams(params, ...)
-
-sim <- project(params)
+plotThermPerformance(paramsTemp)
 
 ```
 
