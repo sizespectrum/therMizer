@@ -35,7 +35,7 @@
 #' @export
 
 upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_temp_array = NULL,
-                              n_pp_array = NULL, vertical_migration_array = NULL){
+                              n_pp_array = NULL, vertical_migration_array = NULL, exposure_array = NULL){
 
   if(is.null(temp_min)){
     if(is.null(species_params(params)$temp_min)) stop("You need to setup min temperature for your species.")
@@ -59,7 +59,7 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_te
     other_params(params)$n_pp_array <- n_pp_array
   }
 
-  if(!is.null(vertical_migration_array)) params <- setVerticality(params, vertical_migration_array)
+  if(!is.null(vertical_migration_array)) params <- setVerticality(params, vertical_migration_array, exposure_array = exposure_array)
 
   params <- setRateFunction(params, "Encounter", "therMizerEncounter")
   params <- setRateFunction(params, "PredRate", "therMizerPredRate")

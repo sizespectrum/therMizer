@@ -76,7 +76,8 @@ scaled_temp_effect <- function(params, t) {
     below_min <- (temp_at_t - 273) < species_params(params)$temp_min
 
     scaled_temp_effect_r[above_max | below_min] = 0
-    scaled_temp_effect_realms[r,,] <- scaled_temp_effect_r * other_params(params)$exposure[r,] * other_params(params)$vertical_migration[r,,]
+    scaled_temp_effect_realms[r,,] <- scaled_temp_effect_r *
+      other_params(params)$exposure[r,] * other_params(params)$vertical_migration[r,,]
   }
 
   scaled_temp_effect <- colSums(scaled_temp_effect_realms)

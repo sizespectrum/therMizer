@@ -11,12 +11,12 @@
 #' @export
 #'
 
-setVerticality <- function(params, vertical_migration_array){
+setVerticality <- function(params, vertical_migration_array, exposure_array = NULL){
 
   species_names <- as.character(params@species_params$species)
   sizes <- params@w
 
-# check if vertical_migration_array is correct
+  # check if vertical_migration_array is correct
   if(dim(vertical_migration_array)[2] != length(species_names))
     stop("The second dimension of vertical_migration_array must be equal to the number of species")
 
@@ -31,20 +31,32 @@ setVerticality <- function(params, vertical_migration_array){
     } # the check above sometimes doesn't work, it may have to do with long decimals and rounding
   }
 
+  other_params(params)$vertical_migration <- vertical_migration_array
 
-other_params(params)$vertical_migration <- vertical_migration_array
+  if(is.null(exposure_array)){
+    exposure_array <- array(0, dim = (c(length(realm_names), length(species_names))), dimnames = list(realm = realm_names, sp = species_names)) # realm x species
 
-exposure_array <- array(0, dim = (c(length(realm_names), length(species_names))), dimnames = list(realm = realm_names, sp = species_names)) # realm x species
-
-for (r in seq(1,length(realm_names),1)) {
-  for (s in seq(1,length(species_names),1)) {
-    if (any(vertical_migration_array[r,s,] > 0)) {
-      exposure_array[r,s] = 1
+    for (r in seq(1,length(realm_names),1)) {
+      for (s in seq(1,length(species_names),1)) {
+        if (any(vertical_migration_array[r,s,] > 0)) {
+          exposure_array[r,s] = 1
+        }
+      }
     }
+  } else {
+    # check if exposure_array is correct
+    if(dim(exposure_array)[1] != length(realm_names))
+      stop("The first dimension of exposure_array must be equal to the number of species.")
+
+    if(dim(exposure_array)[1] != length(species_names))
+      stop("The second dimension of exposure_array must be equal to the number of size classes.")
+
+    if(any(exposure_array > 1 & exposure_array <0))
+      stop("The values within the exposure array must be between 0 and 1.")
   }
-}
+  other_params(params)$exposure <- exposure_array
 
-other_params(params)$exposure <- exposure_array
 
-return(params)
+
+  return(params)
 }

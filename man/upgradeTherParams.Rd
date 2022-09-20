@@ -10,7 +10,8 @@ upgradeTherParams(
   temp_max = NULL,
   ocean_temp_array = NULL,
   n_pp_array = NULL,
-  vertical_migration_array = NULL
+  vertical_migration_array = NULL,
+  exposure_array = NULL
 )
 }
 \arguments{
