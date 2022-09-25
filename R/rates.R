@@ -1,7 +1,7 @@
 
 #' @title therMizerEncounter
 #'
-#' @description bla
+#' @description calculates the temperature-scaled encounter rate 
 #'
 #' @param params mizer object
 #' @param t time
@@ -21,7 +21,7 @@ therMizerEncounter <- function(params, t, ...) {
 
 #' @title therMizerPredRate
 #'
-#' @description bla
+#' @description calculates the temperature-scaled predation rate
 #'
 #' @param params mizer object
 #' @param t time
@@ -76,8 +76,9 @@ therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
 
 #' @title therMizererrepro
 #'
-#' @description bla
-#'
+#' @description calculates the temperature-scaled energy available for 
+#' growth and reproduction 
+#' 
 #' @param params mizer object
 #' @param t time
 #'
@@ -119,7 +120,7 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
 
 #' @title plankton forcing
 #'
-#' @description bla
+#' @description allows for time-varying resource
 #'
 #' @param params mizer object
 #' @param t time
