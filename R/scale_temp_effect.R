@@ -17,7 +17,9 @@ setEncounterPredScale <- function(params){
     temperature <- seq(species_params(params)$temp_min[indv], species_params(params)$temp_max[indv], by = 0.1) + 273
 
     # Find the maximum value of the unscaled effect of temperature on encounter and predation rate for each species
-    species_params(params)$encounterpred_scale[indv] <- max((temperature) * (temperature - (species_params(params)$temp_min[indv] + 273)) * ((species_params(params)$temp_max[indv] + 273) - temperature)^(1/2))
+    species_params(params)$encounterpred_scale[indv] <-
+      max((temperature) * (temperature - (species_params(params)$temp_min[indv] + 273)) *
+            ((species_params(params)$temp_max[indv] + 273) - temperature)^(1/2))
 
   }
   return(params)
@@ -57,7 +59,7 @@ scaled_temp_effect <- function(params, t) {
 
   # Using t+1 to avoid calling ocean_temp[0,] at the first time step
   # Looping through each realm
-  nb_realms <- dim(other_params(params)$ocean_temp)[2]
+  nb_realms <- dim(other_params(params)$vertical_migration)[1]
   for (r in seq(1, nb_realms, 1)) {
     temp_at_t <- other_params(params)$ocean_temp[t + 1,r] + 273
 
@@ -74,8 +76,8 @@ scaled_temp_effect <- function(params, t) {
     below_min <- (temp_at_t - 273) < species_params(params)$temp_min
 
     scaled_temp_effect_r[above_max | below_min] = 0
-
-    scaled_temp_effect_realms[r,,] <- scaled_temp_effect_r * other_params(params)$exposure[r,] * other_params(params)$vertical_migration[r,,]
+    scaled_temp_effect_realms[r,,] <- scaled_temp_effect_r *
+      other_params(params)$exposure[r,] * other_params(params)$vertical_migration[r,,]
   }
 
   scaled_temp_effect <- colSums(scaled_temp_effect_realms)

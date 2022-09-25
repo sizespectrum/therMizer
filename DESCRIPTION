@@ -22,4 +22,6 @@ Collate:
   realms.R
   scale_temp_effect.R
   therParams.R
+  plots.R
+  therMizer-package.R
 RoxygenNote: 7.2.1

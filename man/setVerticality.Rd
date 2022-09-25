@@ -4,7 +4,7 @@
 \alias{setVerticality}
 \title{set verticality}
 \usage{
-setVerticality(params, vertical_migration_array)
+setVerticality(params, vertical_migration_array, exposure_array = NULL)
 }
 \arguments{
 \item{params}{A mizer params object}
