@@ -46,11 +46,11 @@ setVerticality <- function(params, vertical_migration_array, exposure_array = NU
     }
   } else {
     # check if exposure_array is correct
-    if(dim(exposure_array)[1] != length(realm_names))
-      stop("The first dimension of exposure_array must be equal to the number of species.")
+    if(dim(exposure_array)[1] != dim(vertical_migration_array)[1])
+      stop("The first dimension of exposure_array must be equal to the number of realms.")
 
-    if(dim(exposure_array)[1] != length(species_names))
-      stop("The second dimension of exposure_array must be equal to the number of size classes.")
+    if(dim(exposure_array)[2] != length(species_names))
+      stop("The second dimension of exposure_array must be equal to the number of species.")
 
     if(any(exposure_array > 1 & exposure_array <0))
       stop("The values within the exposure array must be between 0 and 1.")
