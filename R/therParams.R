@@ -1,24 +1,5 @@
 ### Function aiming to upgrade a default mizer object to one able to work with the therMizer extension
 
-
-# species_params = data.frame(species = c("speciesA", "speciesB"), w_inf = c(500, 5000), k_vb = c(0.8, 0.3), w_min = c(0.001, 0.001), w_mat = c(5, 50), beta = c(1000,100), sigma = c(3,3))
-# species_params$interaction_resource <- c(1,0.5)
-# params <- newMultispeciesParams(species_params, no_w = 200, kappa = 0.0001) |>
-#   steady(tol = 0.001)
-#
-# species_params(params)$temp_min <- c(-5, 5)
-# species_params(params)$temp_max <- c(10, 20)
-
-# Create temperature array and fill it
-# times <- 0:500
-# ocean_temp_array <- array(NA, dim = c(length(times), length(realm_names)), dimnames = list(time = times, realm = realm_names))
-# temp_inc <- 0
-# for (i in 1:501) {
-#   ocean_temp_array[i,] <- c(-5 + temp_inc, -5 + temp_inc, -5 + temp_inc, -5 + temp_inc)
-#   temp_inc <- temp_inc + 0.1
-# }
-
-
 #' @title Upgrade to thermizer object
 #'
 #' @description Wrapper function making a mizer params object
@@ -37,6 +18,7 @@
 upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_temp_array = NULL,
                               n_pp_array = NULL, vertical_migration_array = NULL, exposure_array = NULL){
 
+  ## temperature parameters
   if(is.null(temp_min)){
     if(is.null(species_params(params)$temp_min)) stop("You need to setup min temperature for your species.")
   } else if(length(temp_min) != length(species_params(params)$species)) { stop("The length of temp_min is not the same as the number of species.")
@@ -51,20 +33,50 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_te
   params <- setEncounterPredScale(params)
   params <- setMetabTher(params)
 
+  ## temperature data arrays
   if(is.null(ocean_temp_array)) stop("You need to specify a temperature array to do the projections.")
   else other_params(params)$ocean_temp <- ocean_temp_array
 
   if(!is.null(n_pp_array)){
-    # params <- setResource(params, resource_dynamics = "plankton_forcing")
+    if(!dim(ocean_temp_array)[1] == dim(plankton_array)[1])
+      stop("The time dimension of ocean_temp_array and n_pp_array must be equal.")
+
+    if(!dim(n_pp_array[2] == length(params@w_full)))
+      stop("The size dimension of the n_pp_array must be the same as w_full.")
+
+    params <- setResource(params, resource_dynamics = "plankton_forcing")
     other_params(params)$n_pp_array <- n_pp_array
   }
 
   if(!is.null(vertical_migration_array)) params <- setVerticality(params, vertical_migration_array, exposure_array = exposure_array)
 
+  ## rate functions
   params <- setRateFunction(params, "Encounter", "therMizerEncounter")
   params <- setRateFunction(params, "PredRate", "therMizerPredRate")
   params <- setRateFunction(params, "EReproAndGrowth", "therMizerEReproAndGrowth")
 
+  ## time dimension
+  sim_times <- c(as.numeric(dimnames(ocean_temp_array)[[1]][1]), dim(ocean_temp_array)[1])
+  other_params(params)$t_idx = - sim_times[1]
+
   return(params)
 
+}
+
+#' @title Project thermizer object
+#'
+#' @description Wrapper function adjusting simulation time and start time
+#' for the project function
+#'
+#' @inheritParams upgradeTherParams
+#'
+#' @export
+#'
+therProject <- function(params){
+  sim_times <- c(as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
+                 dim(other_params(params)$ocean_temp)[1])
+
+  cat(sprintf("The simulation is set to start in %d and will run for %d years.\n",sim_times[1], sim_times[2]))
+
+  sim <- project(params, t_start = sim_times[1], t_max = sim_times[2])
 }

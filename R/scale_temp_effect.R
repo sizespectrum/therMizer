@@ -1,10 +1,12 @@
 ### Functions related to creating the scaling parameters
 
-#' @title Encounter scale
+#' @title Set encounter scalar
 #'
-#' @description  Create parameter for scaling encounter and mortality rates
+#' @description Creates the encounterpred_scale parameter which is
+#' used for scaling encounter and mortality rates and set the temperature scalar
+#' between 0 and 1.
 #'
-#' @param params mizer object
+#' @inheritParams scaled_temp_effect
 #'
 #' @export
 #'
@@ -27,9 +29,10 @@ setEncounterPredScale <- function(params){
 
 #' @title Metabolism temperature
 #'
-#' @description  Determine the minimum, maximum, and range of value for the effect of temperature on metabolism
+#' @description Determine the minimum, maximum, and range of value for the
+#' effect of temperature on metabolism.
 #'
-#' @param params An object of class \linkS4class{MizerParams}.
+#' @inheritParams scaled_temp_effect
 #'
 #' @export
 #'
@@ -47,7 +50,8 @@ setMetabTher <- function(params){
 
 #' @title Temperature scaling factor
 #'
-#' @description Calculate the temperature scaling factor for the encounter rate and predation rate
+#' @description Calculate the temperature scaling factor for the encounter rate
+#' and predation rate.
 #'
 #' @param params An object of class \linkS4class{MizerParams}.
 #' @param t Time
@@ -55,13 +59,14 @@ setMetabTher <- function(params){
 #' @export
 #'
 scaled_temp_effect <- function(params, t) {
+
   scaled_temp_effect_realms <- array(NA, dim = c(dim(other_params(params)$vertical_migration)), dimnames = c(dimnames(other_params(params)$vertical_migration)))
 
   # Using t+1 to avoid calling ocean_temp[0,] at the first time step
   # Looping through each realm
   nb_realms <- dim(other_params(params)$vertical_migration)[1]
   for (r in seq(1, nb_realms, 1)) {
-    temp_at_t <- other_params(params)$ocean_temp[t + 1,r] + 273
+    temp_at_t <- other_params(params)$ocean_temp[t + 1 + other_params(params)$t_idx,r] + 273
 
     # Calculate unscaled temperature effect using a generic polynomial rate equation
     unscaled_temp_effect <-
