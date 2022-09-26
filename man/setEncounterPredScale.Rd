@@ -2,13 +2,15 @@
 % Please edit documentation in R/scale_temp_effect.R
 \name{setEncounterPredScale}
 \alias{setEncounterPredScale}
-\title{Encounter scale}
+\title{Set encounter scalar}
 \usage{
 setEncounterPredScale(params)
 }
 \arguments{
-\item{params}{mizer object}
+\item{params}{An object of class \linkS4class{MizerParams}.}
 }
 \description{
-Create parameter for scaling encounter and mortality rates
+Creates the encounterpred_scale parameter which is
+used for scaling encounter and mortality rates and set the temperature scalar
+between 0 and 1.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/realms.R
 \name{setVerticality}
 \alias{setVerticality}
-\title{set verticality}
+\title{Add realms to params object.}
 \usage{
 setVerticality(params, vertical_migration_array, exposure_array = NULL)
 }
@@ -15,7 +15,7 @@ Values must be positive and the sum of every realms per species per size must
 be one}
 }
 \description{
-set different species specifc realms with different temperatures
+set different species specific realms with different temperatures
 }
 \details{
 Vertical integration functions

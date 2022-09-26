@@ -2,9 +2,9 @@
 #'
 
 
-#' @title set verticality
+#' @title Add realms to params object.
 #'
-#' @description set different species specifc realms with different temperatures
+#' @description set different species specific realms with different temperatures
 #'
 #' @inheritParams upgradeTherParams
 #'
@@ -34,7 +34,8 @@ setVerticality <- function(params, vertical_migration_array, exposure_array = NU
   other_params(params)$vertical_migration <- vertical_migration_array
 
   if(is.null(exposure_array)){
-    exposure_array <- array(0, dim = (c(length(realm_names), length(species_names))), dimnames = list(realm = realm_names, sp = species_names)) # realm x species
+    exposure_array <- array(0, dim = (c(length(realm_names), length(species_names))),
+                            dimnames = list(realm = realm_names, sp = species_names)) # realm x species
 
     for (r in seq(1,length(realm_names),1)) {
       for (s in seq(1,length(species_names),1)) {

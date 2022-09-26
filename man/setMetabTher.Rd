@@ -10,5 +10,6 @@ setMetabTher(params)
 \item{params}{An object of class \linkS4class{MizerParams}.}
 }
 \description{
-Determine the minimum, maximum, and range of value for the effect of temperature on metabolism
+Determine the minimum, maximum, and range of value for the
+effect of temperature on metabolism.
 }

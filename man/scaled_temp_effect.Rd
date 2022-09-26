@@ -12,5 +12,6 @@ scaled_temp_effect(params, t)
 \item{t}{Time}
 }
 \description{
-Calculate the temperature scaling factor for the encounter rate and predation rate
+Calculate the temperature scaling factor for the encounter rate
+and predation rate.
 }

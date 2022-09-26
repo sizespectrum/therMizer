@@ -1,10 +1,9 @@
 
 #' @title therMizerEncounter
 #'
-#' @description calculates the temperature-scaled encounter rate 
+#' @description Calculates the temperature-scaled encounter rate.
 #'
-#' @param params mizer object
-#' @param t time
+#' @inheritParams scaled_temp_effect
 #'
 #' @export
 
@@ -21,15 +20,14 @@ therMizerEncounter <- function(params, t, ...) {
 
 #' @title therMizerPredRate
 #'
-#' @description calculates the temperature-scaled predation rate
+#' @description Calculates the temperature-scaled predation rate.
 #'
-#' @param params mizer object
-#' @param t time
+#' @inheritParams therMizerEncounter
 #'
 #' @export
 
-# Because temperature effect can vary by predator size, we need to insert the temperature scaling into the mizerPredRate function.  This code is the same as that from the mizer github page (24 Aug 22), just with the scaling added in.
 therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
+
   no_sp <- dim(params@interaction)[1]
   no_w <- length(params@w)
   no_w_full <- length(params@w_full)
@@ -74,13 +72,12 @@ therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
   return(pred_rate * params@ft_mask)
 }
 
-#' @title therMizererrepro
+#' @title therMizerEReproAndGrowth
 #'
-#' @description calculates the temperature-scaled energy available for 
-#' growth and reproduction 
-#' 
-#' @param params mizer object
-#' @param t time
+#' @description Calculates the temperature-scaled energy available
+#' for growth and reproduction.
+#'
+#' @inheritParams therMizerEncounter
 #'
 #' @export
 
@@ -92,7 +89,7 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
   # Looping through each realm
   nb_realms <- dim(other_params(params)$exposure)[1]
   for (r in seq(1, nb_realms, 1)) {
-    temp_at_t <- other_params(params)$ocean_temp[t + 1,r]
+    temp_at_t <- other_params(params)$ocean_temp[t + 1 + other_params(params)$t_idx,r]
 
     # Arrhenius equation
     unscaled_temp_effect <- (exp(25.22 - (0.63/((8.62e-5)*(273 + temp_at_t)))))
@@ -120,17 +117,16 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
 
 #' @title plankton forcing
 #'
-#' @description allows for time-varying resource
+#' @description Uses the values from the n_pp_array slot to produce
+#' the resource spectrum.
 #'
-#' @param params mizer object
-#' @param t time
+#' @inheritParams therMizerEncounter
 #'
 #' @export
 
-# Set up new resource forcing "function" - just changes to different time slot in the n_pp_array array
 plankton_forcing <- function(params, t, ...) {
   w_cut_off <- 10
-  pkt <- 10^(other_params(params)$n_pp_array[t + params@other_params$other$t_idx,])/params@dw_full # converting to density
+  pkt <- 10^(other_params(params)$n_pp_array[t + 1 + other_params(params)$t_idx,])/params@dw_full # converting to density
   pkt[which(as.numeric(names(pkt)) >= w_cut_off)] <- 0
 
   return(pkt)

@@ -7,10 +7,11 @@
 plankton_forcing(params, t, ...)
 }
 \arguments{
-\item{params}{mizer object}
+\item{params}{An object of class \linkS4class{MizerParams}.}
 
-\item{t}{time}
+\item{t}{Time}
 }
 \description{
-bla
+Uses the values from the n_pp_array slot to produce
+the resource spectrum.
 }

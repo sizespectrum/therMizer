@@ -2,15 +2,16 @@
 % Please edit documentation in R/rates.R
 \name{therMizerEReproAndGrowth}
 \alias{therMizerEReproAndGrowth}
-\title{therMizererrepro}
+\title{therMizerEReproAndGrowth}
 \usage{
 therMizerEReproAndGrowth(params, t, encounter, feeding_level, ...)
 }
 \arguments{
-\item{params}{mizer object}
+\item{params}{An object of class \linkS4class{MizerParams}.}
 
-\item{t}{time}
+\item{t}{Time}
 }
 \description{
-bla
+Calculates the temperature-scaled energy available
+for growth and reproduction.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{plotThermPerformance}
 \alias{plotThermPerformance}
-\title{plotTherPerformance}
+\title{plot thermal performance.}
 \usage{
 plotThermPerformance(params, return_data = FALSE)
 }
@@ -10,5 +10,5 @@ plotThermPerformance(params, return_data = FALSE)
 \item{params}{A mizer params object}
 }
 \description{
-Take a look at the thermal performance of the species
+Take a look at the thermal performance of the species.
 }

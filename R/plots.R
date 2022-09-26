@@ -1,8 +1,8 @@
 # scripts containing all plot functions of the package
 
-#' @title plotTherPerformance
+#' @title plot thermal performance.
 #'
-#' @description Take a look at the thermal performance of the species
+#' @description Take a look at the thermal performance of the species.
 #'
 #' @inheritParams upgradeTherParams
 #'
