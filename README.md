@@ -123,8 +123,24 @@ The `upgradeTherParams` function combines a standard `mizerParams` object with t
 ```r
 paramsTemp <- upgradeTherParams(paramsTemp, temp_min, temp_max, ocean_temp_array, 
                                 vertical_migration_array, exposure_array)
+                                
+```
 
-sim <- project(paramsTemp)
+Note that the `upgradeTherParams` creates a time index parameter which links `ocean_temp_array`'s times to the simulation's times. This parameter can be found in `other_params(paramsTemp)$t_idx`. This means that now, simulations need to start at least at the first time value of `ocean_temp_array` and cannot exceed the length of time series provided through the same array. `therProject()` automate this process.
+
+```r
+
+sim <- therProject(paramsTemp) 
+
+```
+
+The code above is the equivalent of
+
+```r
+
+sim <- project(paramsTemp, 
+               t_start = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
+               t_max = dim(other_params(params)$ocean_temp)[1])
 
 ```
 
