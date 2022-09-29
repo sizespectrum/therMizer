@@ -38,7 +38,7 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_te
   else other_params(params)$ocean_temp <- ocean_temp_array
 
   if(!is.null(n_pp_array)){
-    if(!dim(ocean_temp_array)[1] == dim(plankton_array)[1])
+    if(!dim(ocean_temp_array)[1] == dim(n_pp_array)[1])
       stop("The time dimension of ocean_temp_array and n_pp_array must be equal.")
 
     if(!dim(n_pp_array[2] == length(params@w_full)))
@@ -56,8 +56,7 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_te
   params <- setRateFunction(params, "EReproAndGrowth", "therMizerEReproAndGrowth")
 
   ## time dimension
-  sim_times <- c(as.numeric(dimnames(ocean_temp_array)[[1]][1]), dim(ocean_temp_array)[1])
-  other_params(params)$t_idx = - sim_times[1]
+  other_params(params)$t_idx = - as.numeric(dimnames(ocean_temp_array)[[1]][1])
 
   return(params)
 
@@ -78,5 +77,5 @@ therProject <- function(params){
 
   cat(sprintf("The simulation is set to start in %d and will run for %d years.\n",sim_times[1], sim_times[2]))
 
-  sim <- project(params, t_start = sim_times[1], t_max = sim_times[2])
+  sim <- project(params, t_start = sim_times[1], t_max = sim_times[2]-1)
 }
