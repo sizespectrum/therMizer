@@ -6,16 +6,17 @@
 #'
 #' @inheritParams upgradeTherParams
 #'
-#' @export
+#' @param return_data Boolean value allowing to return the data frame used for
+#' the plot instead of the plot itself. Default is FALSE.
+#' @param resolution Numeric value which determines the step-width between each
+#' calculation of the species' thermal performance.
+#' is calucalated
 #'
+#' @export
 
-plotThermPerformance <- function(params, return_data = FALSE){
+plotThermPerformance <- function(params, resolution = .2, return_data = FALSE){
 
-  # need temeperature spanning the temp range of all species
-  # need run scaled temp with their params
-  # plot
-
-temp_vec <- seq(min(params@species_params$temp_min), max(params@species_params$temp_max), .2)
+temp_vec <- seq(min(params@species_params$temp_min), max(params@species_params$temp_max), resolution)
 scalar <- NULL
 scalarM <- NULL
 
@@ -60,7 +61,6 @@ for(iTemp in temp_vec){
   scalarM <- rbind(scalarM, temp_effect_metabolism)
 
 }
-
   # plot
 
   rownames(scalar) <- rownames(scalarM) <- temp_vec
@@ -73,6 +73,19 @@ for(iTemp in temp_vec){
 
   plot_dat <- rbind(plot_dat, plot_datM)
   plot_dat$Type <- factor(plot_dat$Type, levels = c("Metabolism","Encounter"))
+
+  # removing scalar = 0 except at the beginning and end of curve (for encounter)
+  zero_keep <- NULL
+  zero_val <- which(plot_dat$scalar == 0)
+  for(i in 1:(length(zero_val)-1)){
+    if(zero_val[i+1] != zero_val[i] + 1){
+      if(plot_dat$Type[zero_val[i]] == "Encounter") zero_keep <- c(zero_keep, i, i+1)
+      else zero_keep <- c(zero_keep, i)
+    }
+  }
+  # zero keep has the position of the row to keep in zero_val
+  zero_val <- zero_val[-zero_keep]
+  plot_dat <-plot_dat[- zero_val,]
 
   p <- ggplot(plot_dat)+
     geom_line(aes(x = temperature, y = scalar, color = Type)) +
