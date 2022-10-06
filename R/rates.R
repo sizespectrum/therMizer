@@ -125,7 +125,7 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
 #' @export
 
 plankton_forcing <- function(params, t, ...) {
-  w_cut_off <- 10
+  w_cut_off <- params@resource_params$w_pp_cutoff
   pkt <- 10^(other_params(params)$n_pp_array[t + 1 + other_params(params)$t_idx,])/params@dw_full # converting to density
   pkt[which(as.numeric(names(pkt)) >= w_cut_off)] <- 0
 

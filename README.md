@@ -52,7 +52,9 @@ You'll also need to three additional parameters: `realm`, `vertical_migration`, 
 
 `ocean_temp` is an array that has temperature(s) in degrees Celsius for each `realm`. It can be a vector, if temperature is constant over time, or an array for dynamic temperatures. If you're using time-varying temperature, the array will have the dimensions of `time` $\times$ `realm`.
 
+### Temperature functions
 
+Temperature affects species within mizer by overwriting the default mizer rate's functions and replacing them by custom functions using the new set of parameters. Two new functions `therMizerEncounter` and `therMizerPredRate` affects the encounter rate and one function `therMizerEReproAndGrowth` takes care of the metabolism's maintenance. These functions can be disabled by setting the arguments `aerobic_effect` and `metabolism_effect` to `FALSE`, respectively for encounter rate and metabolism, in the event of calculating the temperature's effect on only one physiological process for example.
 
 ## Sample code for preparing parameters and input
 
@@ -122,7 +124,8 @@ The `upgradeTherParams` function combines a standard `mizerParams` object with t
 
 ```r
 paramsTemp <- upgradeTherParams(paramsTemp, temp_min, temp_max, ocean_temp_array, 
-                                vertical_migration_array, exposure_array)
+                                vertical_migration_array, exposure_array, 
+                                aerobic_effect, metabolism_effect)
                                 
 ```
 
@@ -140,7 +143,7 @@ The code above is the equivalent of
 
 sim <- project(paramsTemp, 
                t_start = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
-               t_max = dim(other_params(params)$ocean_temp)[1])
+               t_max = dim(other_params(params)$ocean_temp)[1]-1)
 
 ```
 

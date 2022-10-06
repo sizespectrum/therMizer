@@ -11,7 +11,9 @@ upgradeTherParams(
   ocean_temp_array = NULL,
   n_pp_array = NULL,
   vertical_migration_array = NULL,
-  exposure_array = NULL
+  exposure_array = NULL,
+  aerobic_effect = TRUE,
+  metabolism_effect = TRUE
 )
 }
 \arguments{
@@ -21,10 +23,16 @@ upgradeTherParams(
 
 \item{n_pp_array}{An array of plankton forcing}
 
-\item{vertical_migration_array}{An array of number of realms x number of species x number of sizes
-filled with the time ratio of each species spending in each realms.
-Values must be positive and the sum of every realms per species per size must
-be one}
+\item{vertical_migration_array}{An array of number of realms x number of
+species x number of sizes filled with the time ratio of each species spending
+in each realms. Values must be positive and the sum of every realms per
+species per size must be one}
+
+\item{aerobic_effect}{Boolean value which determines if encounter rate is
+affected by temperature. Default is TRUE.}
+
+\item{metabolism_effect}{Boolean value which determines if metabolism rate is
+affected by temperature. Default is TRUE.}
 }
 \description{
 Wrapper function making a mizer params object

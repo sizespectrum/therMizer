@@ -8,26 +8,37 @@
 #' @param params A mizer params object
 #' @param ocean_temp_array An array of temperatures
 #' @param n_pp_array An array of plankton forcing
-#' @param vertical_migration_array An array of number of realms x number of species x number of sizes
-#' filled with the time ratio of each species spending in each realms.
-#' Values must be positive and the sum of every realms per species per size must
-#' be one
+#' @param vertical_migration_array An array of number of realms x number of
+#' species x number of sizes filled with the time ratio of each species spending
+#' in each realms. Values must be positive and the sum of every realms per
+#' species per size must be one
+#' @param aerobic_effect Boolean value which determines if encounter rate is
+#' affected by temperature. Default is TRUE.
+#' @param metabolism_effect Boolean value which determines if metabolism rate is
+#' affected by temperature. Default is TRUE.
 #'
 #' @export
 
-upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_temp_array = NULL,
-                              n_pp_array = NULL, vertical_migration_array = NULL, exposure_array = NULL){
+upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
+                              ocean_temp_array = NULL,
+                              n_pp_array = NULL,
+                              vertical_migration_array = NULL,
+                              exposure_array = NULL,
+                              aerobic_effect = TRUE,
+                              metabolism_effect = TRUE){
 
   ## temperature parameters
   if(is.null(temp_min)){
     if(is.null(species_params(params)$temp_min)) stop("You need to setup min temperature for your species.")
-  } else if(length(temp_min) != length(species_params(params)$species)) { stop("The length of temp_min is not the same as the number of species.")
+  } else if(length(temp_min) != length(species_params(params)$species)) {
+    stop("The length of temp_min is not the same as the number of species.")
   } else {species_params(params)$temp_min <- temp_min}
 
 
   if(is.null(temp_max)){
     if(is.null(species_params(params)$temp_max)) stop("You need to setup max temperature for your species.")
-  } else if(length(temp_max) != length(species_params(params)$species)) { stop("The length of temp_max is not the same as the number of species.")
+  } else if(length(temp_max) != length(species_params(params)$species)) {
+    stop("The length of temp_max is not the same as the number of species.")
   } else {species_params(params)$temp_max <- temp_max}
 
   params <- setEncounterPredScale(params)
@@ -48,12 +59,17 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL, ocean_te
     other_params(params)$n_pp_array <- n_pp_array
   }
 
-  if(!is.null(vertical_migration_array)) params <- setVerticality(params, vertical_migration_array, exposure_array = exposure_array)
+  if(!is.null(vertical_migration_array)) params <- setVerticality(params,
+                                                                  vertical_migration_array,
+                                                                  exposure_array)
 
   ## rate functions
+  if(aerobic_effect){
   params <- setRateFunction(params, "Encounter", "therMizerEncounter")
   params <- setRateFunction(params, "PredRate", "therMizerPredRate")
-  params <- setRateFunction(params, "EReproAndGrowth", "therMizerEReproAndGrowth")
+  }
+
+  if(metabolism_effect) params <- setRateFunction(params, "EReproAndGrowth", "therMizerEReproAndGrowth")
 
   ## time dimension
   other_params(params)$t_idx = - as.numeric(dimnames(ocean_temp_array)[[1]][1])
