@@ -48,13 +48,23 @@ You'll also need to three additional parameters: `realm`, `vertical_migration`, 
 
 `exposure` links `vertical_migration` to `ocean_temp`. It has the dimensions of `realm` $\times$ `sp`. The values are 1 for the realms to which a species is exposed and 0 elsewhere. In theory, you could set all values to 1 and, so long as `vertical_migration` is constructed correctly, get the same results (because when multiplied by `exposure` the result would still be 0 for realms in which species spend no time). It's up to you whether you'd like to go this route. However, you do need to ensure that the realm names and order match those used in `vertical_migration` and `ocean_temp`.
 
+### Temperature functions
+
+Temperature affects species within mizer by overwriting the default mizer rate's functions and replacing them by custom functions using the new set of parameters. Two new functions `therMizerEncounter` and `therMizerPredRate` affects the encounter rate and one function `therMizerEReproAndGrowth` takes care of the metabolism's maintenance. These functions can be disabled by setting the arguments `aerobic_effect` and `metabolism_effect` to `FALSE`, respectively for encounter rate and metabolism.
+
+These functions can also be overridden by the user using `setRateFunction()`. Example below:
+
+```r
+
+paramsTemp <- setRateFunction(paramsTemp,"Encounter","newEncounterFunction")
+
+```
+
 ### Input
 
 `ocean_temp` is an array that has temperature(s) in degrees Celsius for each `realm`. It can be a vector, if temperature is constant over time, or an array for dynamic temperatures. If you're using time-varying temperature, the array will have the dimensions of `time` $\times$ `realm`.
 
-### Temperature functions
 
-Temperature affects species within mizer by overwriting the default mizer rate's functions and replacing them by custom functions using the new set of parameters. Two new functions `therMizerEncounter` and `therMizerPredRate` affects the encounter rate and one function `therMizerEReproAndGrowth` takes care of the metabolism's maintenance. These functions can be disabled by setting the arguments `aerobic_effect` and `metabolism_effect` to `FALSE`, respectively for encounter rate and metabolism, in the event of calculating the temperature's effect on only one physiological process for example.
 
 ## Sample code for preparing parameters and input
 
