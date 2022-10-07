@@ -50,7 +50,7 @@ You'll also need to three additional parameters: `realm`, `vertical_migration`, 
 
 ### Temperature functions
 
-Temperature affects species within mizer by overwriting the default mizer rate's functions and replacing them by custom functions using the new set of parameters. Two new functions `therMizerEncounter` and `therMizerPredRate` affects the encounter rate and one function `therMizerEReproAndGrowth` takes care of the metabolism's maintenance. These functions can be disabled by setting the arguments `aerobic_effect` and `metabolism_effect` to `FALSE`, respectively for encounter rate and metabolism.
+Temperature affects species within mizer by overwriting mizer's default rate functions and replacing them with custom functions using the new set of parameters. Two new functions `therMizerEncounter` and `therMizerPredRate` affect the encounter and predation rates and one function `therMizerEReproAndGrowth` takes care of the maintenance metabolism. These functions can be disabled by setting the arguments `aerobic_effect` and `metabolism_effect` to `FALSE` for encounter and predation rates and for metabolism, respectively.
 
 These functions can also be overridden by the user using `setRateFunction()`. Example below:
 
