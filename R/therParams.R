@@ -52,7 +52,7 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
     if(!dim(ocean_temp_array)[1] == dim(n_pp_array)[1])
       stop("The time dimension of ocean_temp_array and n_pp_array must be equal.")
 
-    if(!dim(n_pp_array[2] == length(params@w_full)))
+    if(!dim(n_pp_array)[2] == length(params@w_full))
       stop("The size dimension of the n_pp_array must be the same as w_full.")
 
     params <- setResource(params, resource_dynamics = "plankton_forcing")
