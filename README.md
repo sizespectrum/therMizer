@@ -1,6 +1,6 @@
 # Introduction to therMizer
 
-The therMizer package is an extension of the mizer package ([Scott et al. 2014](https://doi.org/10.1111/2041-210X.12256)) that allows you to incorporate the effects of temperature on species' metabolic rate and aerobic scope. These effects can vary by individual body size.
+The therMizer package is an extension of the mizer package ([Scott et al. 2014](https://doi.org/10.1111/2041-210X.12256)) that allows you to incorporate the effects of temperature on species' metabolic rate and aerobic scope. These effects can vary by individual body size.  The therMizer package also allows you to use a dynamic resource spectrum.
 
 ## Installing therMizer
 
@@ -29,6 +29,8 @@ The effects of temperature on aerobic scope are approximated by a generic polyno
 The therMizer package attempts to capture these effects based on temperatures to which species are exposed. This exposure can vary by depth, for example for species that undergo diel vertical migration, as well as by size, for example species that undergo ontogenetic vertical migration.
 
 Temperature exposure in therMizer is modeled much the same way fishing mortality is modeled in mizer. `ocean_temp` is analgous to `effort`. It's assigned to a `realm` the same way effort is assigned to a `gear`. `exposure` links species and realms much the same way `catchability` links species and gears. `vertical_migration` brings in body size the same way `selectivity` does. The following section walks through these parameters in more detail.
+
+The therMizer package also allows users to supply a time-varying background resource. If supplied, this is used in place of the default semi-chemostat resource. This option allows users to simulate changes to the plankton community as a driver of food web change, much the same way time-varying fishing can be used. For example, you could use output from an earth system model to inform a size-structured dynamic resource.
 
 ## Model parameters and input
 
@@ -64,6 +66,7 @@ paramsTemp <- setRateFunction(paramsTemp,"Encounter","newEncounterFunction")
 
 `ocean_temp` is an array that has temperature(s) in degrees Celsius for each `realm`. It can be a vector, if temperature is constant over time, or an array for dynamic temperatures. If you're using time-varying temperature, the array will have the dimensions of `time` $\times$ `realm`.
 
+`n_pp` is an array that has numerical plankton abundance for each size class. therMizer will convert these abundances to densities for use within mizer. `n_pp` can be a vector, if these abundances are constant over time, or an array for a dynamic resource. If you're using time-varying plankton, the array will have the dimensions of `time` $\times$ `w`.  
 
 
 ## Sample code for preparing parameters and input
