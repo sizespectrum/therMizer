@@ -14,9 +14,30 @@
 setVerticality <- function(params, vertical_migration_array, exposure_array = NULL){
 
   species_names <- as.character(params@species_params$species)
+  realm_names <- dimnames(vertical_migration_array)$realm
   sizes <- params@w
+  ocean_temp_array <- other_params(params)$ocean_temp
+
+  # check if ocean_array has realms
+  if(is.null(ocean_temp_array))
+    stop("The params object needs to contain an ocean_temp_array.")
+
+  if(is.null(dim(ocean_temp_array))){
+    ocean_temp_array <- array(rep(ocean_temp_array, length(dimnames(vertical_migration_array)[[1]])),
+                              dim = c(length(ocean_temp_array), length(dimnames(vertical_migration_array)[[1]])),
+                              dimnames = list("time" = names(ocean_temp_array),
+                                              "realm" = dimnames(vertical_migration_array)[[1]]))
+    other_params(params)$ocean_temp <- ocean_temp_array
+    message("ocean_temp_array was extended to a matrix with the same names as the vertical_migration_array.")
+  }
+
+  if(is.null(exposure_array) & !isTRUE(all.equal(dimnames(ocean_temp_array)[[2]],dimnames(vertical_migration_array)[[1]])))
+    stop("The realm names of ocean_temp_array and vertical_migration_array are different.")
 
   # check if vertical_migration_array is correct
+  if(dim(vertical_migration_array)[1] != dim(ocean_temp_array)[2])
+    stop("The first dimension of vertical_migration_array must be equal to the number of realms in ocean_temp_array")
+
   if(dim(vertical_migration_array)[2] != length(species_names))
     stop("The second dimension of vertical_migration_array must be equal to the number of species")
 
@@ -46,8 +67,8 @@ setVerticality <- function(params, vertical_migration_array, exposure_array = NU
     }
   } else {
     # check if exposure_array is correct
-    if(dim(exposure_array)[1] != dim(vertical_migration_array)[1])
-      stop("The first dimension of exposure_array must be equal to the number of realms.")
+    if(!isTRUE(all.equal(dimnames(vertical_migration_array)[[1]],dimnames(exposure_array)[[1]])))
+      stop("The first dimension of exposure_array must have the same names as the first dimension of the vertical_migration_array.")
 
     if(dim(exposure_array)[2] != length(species_names))
       stop("The second dimension of exposure_array must be equal to the number of species.")
