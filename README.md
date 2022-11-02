@@ -58,7 +58,7 @@ These functions can also be overridden by the user using `setRateFunction()`. Ex
 
 ```r
 
-paramsTemp <- setRateFunction(paramsTemp,"Encounter","newEncounterFunction")
+params <- setRateFunction(params,"Encounter","newEncounterFunction")
 
 ```
 
@@ -71,12 +71,25 @@ paramsTemp <- setRateFunction(paramsTemp,"Encounter","newEncounterFunction")
 
 ## Sample code for preparing parameters and input
 
+Let's create some example species parameters for two fictional species:
+
+```r
+species_params = data.frame(species = c("speciesA", "speciesB"), w_inf = c(500, 5000), k_vb = c(0.8, 0.3), w_min = c(0.001, 0.001), w_mat = c(5, 50), beta = c(1000,100), sigma = c(3,3))
+species_params$interaction_resource <- c(1,0.5)
+params <- newMultispeciesParams(species_params, no_w = 200, kappa = 0.0001) |> 
+    steady(tol = 0.001)
+
+# Assign them thermal tolerance limits
+species_params(params)$temp_min <- c(-5, 5)
+species_params(params)$temp_max <- c(10, 20)
+```
+
 Here's an example of how to set up the `vertical_migration` array. We'll assume one species stays in the upper 50 m of the water column until it moves to the bottom at maturity and that all sizes of the other species undergo diel vertical migration (DVM). This will give us four realms.
 
 ``` r
 realm_names <- c("upper50m","bottom","DVM_day","DVM_night")
-species_names <- as.character(params_Temp@species_params$species)
-sizes <- params_Temp@w
+species_names <- as.character(params@species_params$species)
+sizes <- params@w
 
 # Create the vertical migration array and fill it
 vertical_migration_array <- array(0, dim = (c(length(realm_names), 
@@ -91,8 +104,8 @@ DVMn <- which(realm_names == "DVM_night") # 0 - 100m average
 
 # Set all sizes below w_mat for speciesA to "upper50m" and all sizes above w_mat to "bottom
 spA <- which(species_names == "speciesA")
-vertical_migration_array[upp, spA, sizes < params_Temp@species_params$w_mat[spA]] <- 1
-vertical_migration_array[btm, spA, sizes >= params_Temp@species_params$w_mat[spA]] <- 1
+vertical_migration_array[upp, spA, sizes < params@species_params$w_mat[spA]] <- 1
+vertical_migration_array[btm, spA, sizes >= params@species_params$w_mat[spA]] <- 1
 
 # Have speciesB split its time equally using DVM
 spB <- which(species_names == "speciesB")
@@ -131,22 +144,43 @@ for (i in 1:501) {
 }
 ```
 
+An example for creating a dynamic resource spectra.
+
+``` r
+x <- params@w_full
+slope <- -1
+intercept <- -5
+
+# Create resource array and fill it
+n_pp_array <- array(NA, dim = c(length(times), length(x)), 
+                    dimnames = list(time = times, w = signif(x,3)))
+
+for (i in 1:501) {
+  # Add some noise around the slope and intercept as we fill the array
+  n_pp_array[i,] <- (slope * runif(1, min = 0.95, max = 1.05) * log10(x)) + 
+                    (intercept * runif(1, min = 0.95, max = 1.05))
+}
+
+```
+
 ## Running a scenario
 
 The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above.
 
 ```r
-paramsTemp <- upgradeTherParams(paramsTemp, temp_min, temp_max, ocean_temp_array, 
-                                vertical_migration_array, exposure_array, 
-                                aerobic_effect, metabolism_effect)
+params <- upgradeTherParams(params, ocean_temp_array = ocean_temp_array,
+                            n_pp_array = n_pp_array, 
+                            vertical_migration_array = vertical_migration_array,
+                            exposure_array = exposure_array, 
+                            aerobic_effect = TRUE, metabolism_effect = TRUE)
                                 
 ```
 
-Note that the `upgradeTherParams` creates a time index parameter which links `ocean_temp_array`'s times to the simulation's times. This parameter can be found in `other_params(paramsTemp)$t_idx`. This means that now, simulations need to start at least at the first time value of `ocean_temp_array` and cannot exceed the length of time series provided through the same array. `therProject()` automate this process.
+Note that the `upgradeTherParams` creates a time index parameter which links `ocean_temp_array`'s times to the simulation's times. This parameter can be found in `other_params(params)$t_idx`. This means that now, simulations need to start at least at the first time value of `ocean_temp_array` and cannot exceed the length of time series provided through the same array. `therProject()` automate this process.
 
 ```r
 
-sim <- therProject(paramsTemp) 
+sim <- therProject(params) 
 
 ```
 
@@ -154,7 +188,7 @@ The code above is the equivalent of
 
 ```r
 
-sim <- project(paramsTemp, 
+sim <- project(params, 
                t_start = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
                t_max = dim(other_params(params)$ocean_temp)[1]-1)
 
@@ -164,7 +198,7 @@ The `plotThermPerformance` function displays the shape of the thermal performanc
 
 ```r
 
-plotThermPerformance(paramsTemp)
+plotThermPerformance(params)
 
 ```
 
