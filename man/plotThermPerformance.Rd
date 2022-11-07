@@ -10,8 +10,7 @@ plotThermPerformance(params, resolution = 0.2, return_data = FALSE)
 \item{params}{A mizer params object}
 
 \item{resolution}{Numeric value which determines the step-width between each
-calculation of the species' thermal performance.
-is calucalated}
+calculation of the species' thermal performance. Default is 0.2.}
 
 \item{return_data}{Boolean value allowing to return the data frame used for
 the plot instead of the plot itself. Default is FALSE.}

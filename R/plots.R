@@ -9,8 +9,7 @@
 #' @param return_data Boolean value allowing to return the data frame used for
 #' the plot instead of the plot itself. Default is FALSE.
 #' @param resolution Numeric value which determines the step-width between each
-#' calculation of the species' thermal performance.
-#' is calucalated
+#' calculation of the species' thermal performance. Default is 0.2.
 #'
 #' @export
 
