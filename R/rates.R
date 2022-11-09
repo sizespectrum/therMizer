@@ -83,6 +83,10 @@ therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
 
 therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
 
+  # checking that t is within ocean_temp, defaulting to first value otherwise
+  if(!round(t) %in% as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]))
+    t = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]])[1] + t
+
   temp_effect_metab_realms <- array(NA, dim = c(dim(other_params(params)$vertical_migration)), dimnames = c(dimnames(other_params(params)$vertical_migration)))
 
   # Using t+1 to avoid calling ocean_temp[0,] at the first time step
@@ -125,6 +129,11 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
 #' @export
 
 plankton_forcing <- function(params, t, ...) {
+
+  # checking that t is within ocean_temp, defaulting to first value otherwise
+  if(!round(t) %in% as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]))
+    t = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]])[1] + t
+
   w_cut_off <- params@resource_params$w_pp_cutoff
   pkt <- 10^(other_params(params)$n_pp_array[t + 1 + other_params(params)$t_idx,])/params@dw_full # converting to density
   pkt[which(as.numeric(names(pkt)) >= w_cut_off)] <- 0
