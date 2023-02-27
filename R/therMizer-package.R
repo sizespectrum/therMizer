@@ -6,7 +6,7 @@
 #' that contains additional features regarding the effect
 #' of temperature on organisms.
 #'
-#' @import mizer dplyr ggplot2 assertthat
+#' @import mizer dplyr ggplot2 assertthat lubridate
 #' @importFrom stats mvfft
 #' @md
 #' @keywords internal

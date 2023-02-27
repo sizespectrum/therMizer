@@ -6,8 +6,14 @@
 #' into something useable by the package
 #'
 #' @param params A mizer params object
-#' @param ocean_temp_array An array of temperatures
-#' @param n_pp_array An array of plankton forcing
+#' @param temp_min A vector of numeric values the same length as the number of
+#' species in params. Contains the minimum temperature range per species.
+#' @param temp_max A vector of numeric values the same length as the number of
+#' species in params. Contains the maximum temperature range per species.
+#' @param ocean_temp_array A vector or array of temperature. The first dimension
+#' must be time. If it is an array, the second dimension must be realms. Numeric
+#' dimnames for time are assumed to be years. Use dates otherwise.
+#' @param n_pp_array An array of plankton forcing of dimensions time x sizes
 #' @param vertical_migration_array An array of number of realms x number of
 #' species x number of sizes filled with the time ratio of each species spending
 #' in each realms. Values must be positive and the sum of every realms per
@@ -47,6 +53,27 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
 
   ## temperature data array
   if(is.null(ocean_temp_array)) stop("You need to specify a temperature array to do the projections.")
+
+  ## check dimension
+  if(is.numeric(ocean_temp_array)){
+## check dimnames
+    date_vec <- names(ocean_temp_array)
+    date_vec <- parse_date_time(date_vec, orders = c("ymd"))
+    #if(is.character(date_vec))
+    date_vec <- as.numeric(year(date_vec)) + as.numeric(yday(date_vec) - 1) / as.numeric(ifelse(leap_year(date_vec), 366, 365))
+
+    ocean_temp_array <- matrix(ocean_temp_array,
+                               nrow = length(ocean_temp_array),
+                               ncol = dim(params@species_params)[1],
+                               byrow = F,
+                               dimnames = list("time" = date_vec, "species" = params@species_params$species))
+
+      } else if(is.array(ocean_temp_array))
+  {
+print("ya")
+  } else stop("The ocean_temp_array is of the wrong format")
+
+
 
   other_params(params)$ocean_temp <- ocean_temp_array
 

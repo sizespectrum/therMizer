@@ -22,7 +22,8 @@ Imports:
     assertthat,
     bslib,
     dplyr,
-    ggplot2
+    ggplot2,
+    lubridate
 Collate:
   rates.R
   realms.R

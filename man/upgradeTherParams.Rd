@@ -19,9 +19,17 @@ upgradeTherParams(
 \arguments{
 \item{params}{A mizer params object}
 
-\item{ocean_temp_array}{An array of temperatures}
+\item{temp_min}{A vector of numeric values the same length as the number of
+species in params. Contains the minimum temperature range per species.}
 
-\item{n_pp_array}{An array of plankton forcing}
+\item{temp_max}{A vector of numeric values the same length as the number of
+species in params. Contains the maximum temperature range per species.}
+
+\item{ocean_temp_array}{A vector or array of temperature. The first dimension
+must be time. If it is an array, the second dimension must be realms. Numeric
+dimnames for time are assumed to be years. Use dates otherwise.}
+
+\item{n_pp_array}{An array of plankton forcing of dimensions time x sizes}
 
 \item{vertical_migration_array}{An array of number of realms x number of
 species x number of sizes filled with the time ratio of each species spending
