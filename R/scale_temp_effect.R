@@ -74,7 +74,7 @@ scaled_temp_effect <- function(params, t) {
   nb_realms <- dim(other_params(params)$vertical_migration)[1]
   for (r in seq(1, nb_realms, 1)) {
     index <- which.min(abs(as.numeric(dimnames(other_params(params)$ocean_temp)[[1]])  - t))
-    temp_at_t <- other_params(newP)$ocean_temp[index,r] + 273
+    temp_at_t <- other_params(params)$ocean_temp[index,r] + 273
 
     # Calculate unscaled temperature effect using a generic polynomial rate equation
     unscaled_temp_effect <-
