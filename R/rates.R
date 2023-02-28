@@ -135,7 +135,8 @@ plankton_forcing <- function(params, t, ...) {
     t = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]])[1] + t
 
   w_cut_off <- params@resource_params$w_pp_cutoff
-  pkt <- 10^(other_params(params)$n_pp_array[t + 1 + other_params(params)$t_idx,])/params@dw_full # converting to density
+  index <- which.min(abs(as.numeric(dimnames(other_params(params)$n_pp_array)[[1]]) - t))
+  pkt <- 10^(other_params(params)$n_pp_array[index,])/params@dw_full # converting to density
   pkt[which(as.numeric(names(pkt)) >= w_cut_off)] <- 0
 
   return(pkt)

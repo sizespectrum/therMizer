@@ -56,7 +56,7 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
 
   ## check dimension
   if(is.numeric(ocean_temp_array)){
-## check dimnames
+    ## check dimnames
     date_vec <- names(ocean_temp_array)
     date_vec <- parse_date_time(date_vec, orders = c("ymd"))
     #if(is.character(date_vec))
@@ -68,9 +68,10 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
                                byrow = F,
                                dimnames = list("time" = date_vec, "species" = params@species_params$species))
 
-      } else if(is.array(ocean_temp_array))
+  } else if(is.array(ocean_temp_array))
   {
-print("ya")
+    # does that mean there are realms already?, jsut need to change the names then
+    print("ya")
   } else stop("The ocean_temp_array is of the wrong format")
 
 
@@ -85,7 +86,19 @@ print("ya")
     if(!dim(n_pp_array)[2] == length(params@w_full))
       stop("The size dimension of the n_pp_array must be the same as w_full.")
 
+    if(!identical(dimnames(n_pp_array)[[2]],params@w_full)){
+      warning("The dimnames of the second dimension of n_pp_array are not the same
+      as the ones in w_full. Since the dimension size is the same, the dimnames
+      have been replaced by w_full.")
+      dimnames(n_pp_array)[[2]] <- params@w_full
+    }
+
+    if(!is.array(n_pp_array) && !is.matrix(n_pp_array)) n_pp_array <- as.matrix(n_pp_array)
+
     params <- setResource(params, resource_dynamics = "plankton_forcing")
+    # time names of ocean_temp_array might have been modified for thermizer to work, doing the same to n_pp
+    dimnames(n_pp_array)[[1]] <- dimnames(ocean_temp_array)[[1]]
+
     other_params(params)$n_pp_array <- n_pp_array
   }
 
