@@ -181,22 +181,21 @@ params <- upgradeTherParams(params,
                             metabolism_effect = TRUE)
                                 
 ```
+Note that `ocean_temp_array` defines the specific time frame for the projection in time that needs to occur in the `project()` function. In particular, the `t_start` argument must be within the range of dates covered by `ocean_temp_array`. Similarly, the end of the simulation is determined by `t_start` + `t_max`, which also needs to be within the range of dates of `ocean_temp_array`.
 
-Note that the `upgradeTherParams` creates a time index parameter which links `ocean_temp_array`'s times to the simulation's times. This parameter can be found in `other_params(params)$t_idx`. This means that now, simulations need to start at least at the first time value of `ocean_temp_array` and cannot exceed the length of time series provided through the same array. `therProject()` automate this process.
+Moreover, it is important to note that mizer is based on a yearly time step. If `ocean_temp_array` does not follow yearly time steps, the `dt` argument in the `project()` function must be adjusted accordingly. The `dt` argument specifies the time step size and should be set to the fraction of a year corresponding to the time step used in `ocean_temp_array`. For example, if `ocean_temp_array` provides monthly temperatures, the `dt` value should be set to 1/12, while daily temperatures would require a `dt` of 1/365 or 1/366 for leap years.
 
-```r
-
-sim <- therProject(params) 
-
-```
-
-The code above is the equivalent of
+Below is an example to use the `project` function with therMizer:
 
 ```r
 
 sim <- project(params, 
+               # First date in ocean_temp_array
                t_start = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
-               t_max = dim(other_params(params)$ocean_temp)[1]-1)
+               # Duration in Years
+               t_max = 10,
+               # Monthly dates
+               dt = 1/12)
 
 ```
 

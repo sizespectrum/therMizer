@@ -93,8 +93,8 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
   # Looping through each realm
   nb_realms <- dim(other_params(params)$exposure)[1]
   for (r in seq(1, nb_realms, 1)) {
-    temp_at_t <- other_params(params)$ocean_temp[t + 1 + other_params(params)$t_idx,r]
-
+    index <- which.min(abs(as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]) - t))
+    temp_at_t <- other_params(params)$ocean_temp[index,r] + 273
     # Arrhenius equation
     unscaled_temp_effect <- (exp(25.22 - (0.63/((8.62e-5)*(273 + temp_at_t)))))
 

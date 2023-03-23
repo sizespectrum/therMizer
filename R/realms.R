@@ -1,6 +1,4 @@
 #' Vertical integration functions
-#'
-
 
 #' @title Add realms to params object.
 #'
@@ -46,10 +44,16 @@ setVerticality <- function(params, vertical_migration_array, exposure_array = NU
 
   # And check that all filled size classes sum to 1, no more and no less
   for (iSpecies in 1:length(species_names)) {
-    if (!all(apply(vertical_migration_array[ , iSpecies, ],2,sum) == 1)) {
-      stop(paste0("Your realm allocations for ", species_names[iSpecies], " don't sum to 1 for all sizes.
+    if(length(realm_names) == 1){
+      if(!all(vertical_migration_array[ , iSpecies, ] == 1))
+        stop(paste0("Your realm allocations for ", species_names[iSpecies], " don't sum to 1 for all sizes.
 		Their time in a given realm is either over- or under-allocated."))
-    } # the check above sometimes doesn't work, it may have to do with long decimals and rounding
+    } else {
+      if (!all(apply(vertical_migration_array[ , iSpecies, ],2,sum) == 1)) {
+        stop(paste0("Your realm allocations for ", species_names[iSpecies], " don't sum to 1 for all sizes.
+		Their time in a given realm is either over- or under-allocated."))
+      }
+    }# the check above sometimes doesn't work, it may have to do with long decimals and rounding
   }
 
   other_params(params)$vertical_migration <- vertical_migration_array
