@@ -165,20 +165,20 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
   return(params)
 }
 
-#' @title Project thermizer object
+#' #' @title Project thermizer object
+#' #'
+#' #' @description Wrapper function adjusting simulation time and start time
+#' #' for the project function
+#' #'
+#' #' @inheritParams upgradeTherParams
+#' #'
+#' #' @export
+#' #'
+#' therProject <- function(params){
+#'   sim_times <- c(as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
+#'                  dim(other_params(params)$ocean_temp)[1])
 #'
-#' @description Wrapper function adjusting simulation time and start time
-#' for the project function
+#'   cat(sprintf("The simulation is set to start in %d and will run for %d years.\n",sim_times[1], sim_times[2]))
 #'
-#' @inheritParams upgradeTherParams
-#'
-#' @export
-#'
-therProject <- function(params){
-  sim_times <- c(as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1]),
-                 dim(other_params(params)$ocean_temp)[1])
-
-  cat(sprintf("The simulation is set to start in %d and will run for %d years.\n",sim_times[1], sim_times[2]))
-
-  sim <- project(params, t_start = sim_times[1], t_max = sim_times[2]-1)
-}
+#'   sim <- project(params, t_start = sim_times[1], t_max = sim_times[2]-1)
+#' }
