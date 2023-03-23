@@ -71,6 +71,8 @@ params <- setRateFunction(params,"Encounter","newEncounterFunction")
 
 ## Sample code for preparing parameters and input
 
+Below are examples on how to setup different variables and arrays to use with therMizer. It does not mean you need all of them to run a model. The bare minimum is a mizerParams object, the two temperature range vectors `temp_min` and `temp_max` and finally the temperature array.
+
 Let's create some example species parameters for two fictional species:
 
 ```r
@@ -168,11 +170,15 @@ for (i in 1:501) {
 The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above.
 
 ```r
-params <- upgradeTherParams(params, ocean_temp_array = ocean_temp_array,
+params <- upgradeTherParams(params, 
+                            temp_min = temp_min,
+                            temp_max = temp_max,
+                            ocean_temp_array = ocean_temp_array,
                             n_pp_array = n_pp_array, 
                             vertical_migration_array = vertical_migration_array,
                             exposure_array = exposure_array, 
-                            aerobic_effect = TRUE, metabolism_effect = TRUE)
+                            aerobic_effect = TRUE, 
+                            metabolism_effect = TRUE)
                                 
 ```
 
