@@ -55,11 +55,13 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
   if(is.null(ocean_temp_array)) stop("You need to specify a temperature array to do the projections.")
 
   ## check dimension
-  if(is.numeric(ocean_temp_array)){
+  if(is.vector(ocean_temp_array)){
     ## check dimnames
     date_vec <- names(ocean_temp_array)
-    date_vec <- parse_date_time(date_vec, orders = c("ymd"))
-    #if(is.character(date_vec))
+    parse_order <- ifelse(nchar(date_vec) == 4, "%Y",
+                          ifelse(nchar(date_vec) == 7, "%Y-%m",
+                                 "%Y-%m-%d"))
+    date_vec <- parse_date_time(date_vec, orders = parse_order)
     date_vec <- as.numeric(year(date_vec)) + as.numeric(yday(date_vec) - 1) / as.numeric(ifelse(leap_year(date_vec), 366, 365))
 
     ocean_temp_array <- matrix(ocean_temp_array,
@@ -70,8 +72,17 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
 
   } else if(is.array(ocean_temp_array))
   {
-    # does that mean there are realms already?, jsut need to change the names then
-    print("ya")
+    # assuming that the second dimension is realms. If there is an issue with that it will be signaled later
+    ## check dimnames
+    date_vec <- dimnames(ocean_temp_array)[[1]]
+
+    parse_order <- ifelse(nchar(date_vec) == 4, "%Y",
+                          ifelse(nchar(date_vec) == 7, "%Y-%m",
+                                 "%Y-%m-%d"))
+
+    date_vec <- parse_date_time(date_vec, orders = parse_order)
+    date_vec <- as.numeric(year(date_vec)) + as.numeric(yday(date_vec) - 1) / as.numeric(ifelse(leap_year(date_vec), 366, 365))
+    dimnames(ocean_temp_array)[[1]] <- date_vec
   } else stop("The ocean_temp_array is of the wrong format")
 
 
