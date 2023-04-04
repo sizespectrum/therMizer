@@ -42,13 +42,13 @@ In addition to the species parameters required by mizer, you'll also need to sup
 
 ### Temperature parameters
 
-You'll also need to three additional parameters: `realm`, `vertical_migration`, and `exposure`.
+By default, therMizer provides values for the realm, vertical_migration, and exposure parameters that are appropriate for most use cases. This means that if you don't want to specify custom values for these parameters, you can simply omit them from your code and therMizer will use the default values instead, so you can start modelling with just one temperature value at the minimum. Using default values can save you time and effort, since you don't need to spend time researching or experimenting with different parameter values. However, if you do choose to specify custom values for these parameters, therMizer provides flexibility to do so, allowing you to customize your model to fit your specific research question or study system. 
 
-`realm` refers to the vertical realms or depth strata which species inhabit and for which temperatures will be provided. These could be named something like *epipelagic*, *mesopelagic*, *surface*, *bottom*, whatever you want to call them. The important thing is that they match the realm names provided in the `ocean_temp` array that you're using.
+`realm` refers to the vertical realms or depth strata which species inhabit and for which temperatures will be provided. These could be named something like *epipelagic*, *mesopelagic*, *surface*, *bottom*, whatever you want to call them. These realms should be set up as the second dimension (or columns) of `ocean_temp`: one column per realm representing different time series of temperature. By default, if only one vector of temperature is supplied, there will be only one realm.
 
-`vertical_migration` simulates the proportion of time that a given size of a given species spends in a given realm. It has the dimensions of `realm` $\times$ `sp` $\times$ `w`. Values can range from 0 to 1, and must sum to 1 across all realms for each species and size. If values sum to something other than one, it means that either a portion of time is unaccounted for (\<1) or that time across realms is over-allocated (\>1). Either way, you'll be modeling something that cannot be replicated in the real ocean.
+`vertical_migration` simulates the proportion of time that a given size of a given species spends in a given realm. It has the dimensions of `realm` $\times$ `sp` $\times$ `w`. Values can range from 0 to 1, and must sum to 1 across all realms for each species and size. If values sum to something other than one, it means that either a portion of time is unaccounted for (\<1) or that time across realms is over-allocated (\>1). Either way, you'll be modeling something that cannot be replicated in the real ocean. By default, species are assumed to spend equal time across all realms.
 
-`exposure` links `vertical_migration` to `ocean_temp`. It has the dimensions of `realm` $\times$ `sp`. The values are 1 for the realms to which a species is exposed and 0 elsewhere. In theory, you could set all values to 1 and, so long as `vertical_migration` is constructed correctly, get the same results (because when multiplied by `exposure` the result would still be 0 for realms in which species spend no time). It's up to you whether you'd like to go this route. However, you do need to ensure that the realm names and order match those used in `vertical_migration` and `ocean_temp`.
+`exposure` links `vertical_migration` to `ocean_temp`. It has the dimensions of `realm` $\times$ `sp`. The values are 1 for the realms to which a species is exposed and 0 elsewhere. In theory, you could set all values to 1 and, so long as `vertical_migration` is constructed correctly, get the same results (because when multiplied by `exposure` the result would still be 0 for realms in which species spend no time). It's up to you whether you'd like to go this route. However, you do need to ensure that the realm names and order match those used in `vertical_migration` and `ocean_temp`. By default, the exposure is set to 1 for all realms and species and therefore has no effects.
 
 ### Temperature functions
 
@@ -167,7 +167,7 @@ for (i in 1:501) {
 
 ## Running a scenario
 
-The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above.
+The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above. The only necessary parameters are `temp_min`, `temp_max` and `ocean_temp_array`.
 
 ```r
 params <- upgradeTherParams(params, 
