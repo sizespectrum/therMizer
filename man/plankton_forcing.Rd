@@ -10,6 +10,8 @@ plankton_forcing(params, t, ...)
 \item{params}{An object of class \linkS4class{MizerParams}.}
 
 \item{t}{Time}
+
+\item{...}{To pass further arguments down to the function}
 }
 \description{
 Uses the values from the n_pp_array slot to produce

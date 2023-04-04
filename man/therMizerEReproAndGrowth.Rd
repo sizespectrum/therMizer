@@ -10,6 +10,14 @@ therMizerEReproAndGrowth(params, t, encounter, feeding_level, ...)
 \item{params}{An object of class \linkS4class{MizerParams}.}
 
 \item{t}{Time}
+
+\item{encounter}{An array (species x size) with the encounter rate as
+calculated by getEncounter().}
+
+\item{feeding_level}{An array (species x size) with the feeding level as
+calculated by getFeedingLevel().}
+
+\item{...}{To pass further arguments down to the function}
 }
 \description{
 Calculates the temperature-scaled energy available

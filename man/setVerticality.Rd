@@ -12,7 +12,12 @@ setVerticality(params, vertical_migration_array, exposure_array = NULL)
 \item{vertical_migration_array}{An array of number of realms x number of
 species x number of sizes filled with the time ratio of each species spending
 in each realms. Values must be positive and the sum of every realms per
-species per size must be one}
+species per size must be one. Default is species spending equal time between
+all realms.}
+
+\item{exposure_array}{An array of number of realms x species filled with values
+from 0 to 1. This array scales the effect of temperature for each species per
+realms. Default is ones.}
 }
 \description{
 set different species specific realms with different temperatures

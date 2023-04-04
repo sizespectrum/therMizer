@@ -23,7 +23,8 @@ Imports:
     bslib,
     dplyr,
     ggplot2,
-    lubridate
+    lubridate,
+    reshape2
 Collate:
   rates.R
   realms.R

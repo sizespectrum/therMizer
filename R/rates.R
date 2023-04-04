@@ -3,7 +3,7 @@
 #'
 #' @description Calculates the temperature-scaled encounter rate.
 #'
-#' @inheritParams scaled_temp_effect
+#' @inheritParams therMizerPredRate
 #'
 #' @export
 
@@ -22,7 +22,14 @@ therMizerEncounter <- function(params, t, ...) {
 #'
 #' @description Calculates the temperature-scaled predation rate.
 #'
-#' @inheritParams therMizerEncounter
+#' @inheritParams scaled_temp_effect
+#' @param n A matrix of species abundances (species x size).
+#' @param n_pp A vector of the resource abundance by size.
+#' @param n_other A list of abundances for other dynamical components of the
+#' ecosystem.
+#' @param feeding_level An array (species x size) with the feeding level as
+#' calculated by getFeedingLevel().
+#' @param ... To pass further arguments down to the function
 #'
 #' @export
 
@@ -77,7 +84,9 @@ therMizerPredRate <- function(params, n, n_pp, n_other, t, feeding_level, ...) {
 #' @description Calculates the temperature-scaled energy available
 #' for growth and reproduction.
 #'
-#' @inheritParams therMizerEncounter
+#' @inheritParams therMizerPredRate
+#' @param encounter An array (species x size) with the encounter rate as
+#' calculated by getEncounter().
 #'
 #' @export
 
@@ -124,7 +133,7 @@ therMizerEReproAndGrowth <- function(params, t, encounter, feeding_level, ...) {
 #' @description Uses the values from the n_pp_array slot to produce
 #' the resource spectrum.
 #'
-#' @inheritParams therMizerEncounter
+#' @inheritParams therMizerPredRate
 #'
 #' @export
 

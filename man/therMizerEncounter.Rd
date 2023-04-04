@@ -10,6 +10,8 @@ therMizerEncounter(params, t, ...)
 \item{params}{An object of class \linkS4class{MizerParams}.}
 
 \item{t}{Time}
+
+\item{...}{To pass further arguments down to the function}
 }
 \description{
 Calculates the temperature-scaled encounter rate.

@@ -1,5 +1,8 @@
 # scripts containing all plot functions of the package
 
+# to appease R CMD checks
+globalVariables(c("temperature", "scalar","Type"))
+
 #' @title plot thermal performance.
 #'
 #' @description Take a look at the thermal performance of the species.

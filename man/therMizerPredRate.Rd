@@ -9,7 +9,19 @@ therMizerPredRate(params, n, n_pp, n_other, t, feeding_level, ...)
 \arguments{
 \item{params}{An object of class \linkS4class{MizerParams}.}
 
+\item{n}{A matrix of species abundances (species x size).}
+
+\item{n_pp}{A vector of the resource abundance by size.}
+
+\item{n_other}{A list of abundances for other dynamical components of the
+ecosystem.}
+
 \item{t}{Time}
+
+\item{feeding_level}{An array (species x size) with the feeding level as
+calculated by getFeedingLevel().}
+
+\item{...}{To pass further arguments down to the function}
 }
 \description{
 Calculates the temperature-scaled predation rate.
