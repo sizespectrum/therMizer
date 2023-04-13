@@ -25,7 +25,7 @@ species in params. Contains the minimum temperature range per species.}
 \item{temp_max}{A vector of numeric values the same length as the number of
 species in params. Contains the maximum temperature range per species.}
 
-\item{ocean_temp_array}{A vector or array of temperature. The first dimension
+\item{ocean_temp_array}{A scalar, vector or array of temperature. The first dimension
 must be time. If it is an array, the second dimension must be realms. Numeric
 dimnames for time are assumed to be years. Use dates otherwise.}
 

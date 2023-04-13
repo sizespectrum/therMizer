@@ -59,21 +59,19 @@ setMetabTher <- function(params){
 #' @export
 #'
 scaled_temp_effect <- function(params, t) {
-  # print("t")
-  # print(t)
-  # checking that t is within ocean_temp, defaulting to first value otherwise
-  # TODO update with monthly version
+  # checking that t is within ocean_temp, cycling through otherwise
   if(!round(t) %in% as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]))
-    t = as.numeric(dimnames(other_params(params)$ocean_temp)[[1]])[1] + t
+    t <- t %% length(dimnames(other_params(params)$ocean_temp)[[1]])
 
   scaled_temp_effect_realms <- array(NA, dim = c(dim(other_params(params)$vertical_migration)),
                                      dimnames = c(dimnames(other_params(params)$vertical_migration)))
 
-  # Using t+1 to avoid calling ocean_temp[0,] at the first time step
   # Looping through each realm
   nb_realms <- dim(other_params(params)$vertical_migration)[1]
   for (r in seq(1, nb_realms, 1)) {
-    index <- which.min(abs(as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]) - t))
+    # index selects the right temperature for any t
+    index_vec <- as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]) - t
+    index <- which(index_vec == max(index_vec[index_vec<=0]))
     temp_at_t <- other_params(params)$ocean_temp[index,r] + 273
 
     # Calculate unscaled temperature effect using a generic polynomial rate equation
@@ -92,12 +90,6 @@ scaled_temp_effect <- function(params, t) {
     scaled_temp_effect_realms[r,,] <- scaled_temp_effect_r *
       other_params(params)$exposure[r,] * other_params(params)$vertical_migration[r,,]
   }
-
-  # print("index")
-  # print(index)
-  # print("temperature")
-  # print(temp_at_t - 273)
-
   scaled_temp_effect <- colSums(scaled_temp_effect_realms)
 
   return(scaled_temp_effect)

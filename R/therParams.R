@@ -10,7 +10,7 @@
 #' species in params. Contains the minimum temperature range per species.
 #' @param temp_max A vector of numeric values the same length as the number of
 #' species in params. Contains the maximum temperature range per species.
-#' @param ocean_temp_array A vector or array of temperature. The first dimension
+#' @param ocean_temp_array A scalar, vector or array of temperature. The first dimension
 #' must be time. If it is an array, the second dimension must be realms. Numeric
 #' dimnames for time are assumed to be years. Use dates otherwise.
 #' @param n_pp_array An array of plankton forcing of dimensions time x sizes
@@ -61,8 +61,12 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
   ## check dimension
   if(is.vector(ocean_temp_array)){
     ## check dimnames
+    if(is.null(names(ocean_temp_array))){
+      warning("ocean_temp_array has no dates. They are assumed to be successive years staring from 0.")
+      names(ocean_temp_array) <- sprintf("%04d", seq(0, length.out = length(ocean_temp_array)))
+    }
     date_vec <- names(ocean_temp_array)
-    parse_order <- ifelse(nchar(date_vec) == 4, "%Y",
+    parse_order <- ifelse(nchar(date_vec) <= 4, "%Y",
                           ifelse(nchar(date_vec) == 7, "%Y-%m",
                                  "%Y-%m-%d"))
     date_vec <- parse_date_time(date_vec, orders = parse_order)

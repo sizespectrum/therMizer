@@ -1,7 +1,7 @@
 Package: therMizer
 Type: Package
 Title: therMizer: Temperature-Dependent Rates in Mizer
-Version: 0.1.0
+Version: 1.0.0
 Description: A set of functions that allows uers to incorporate
     temperature-dependent rates in mizer.
 Maintainer: Romain Forestier <romain.forestier@utas.edu.au>

@@ -42,7 +42,7 @@ In addition to the species parameters required by mizer, you'll also need to sup
 
 ### Temperature parameters
 
-By default, therMizer provides values for the `realm`, `vertical_migration`, and `exposure` parameters that are appropriate for most use cases. This means that if you don't want to specify custom values for these parameters, you can simply omit them from your code, and therMizer will use the default values instead. This allows you to get started with modelling using just one temperature time series at the minimum. Using default values can save you time and effort since you don't need to spend time researching or experimenting with different parameter values. However, if you choose to specify custom values for these parameters, therMizer provides flexibility to do so, allowing you to customize your model to fit your specific research question or study system.
+By default, therMizer provides values for the `realm`, `vertical_migration`, and `exposure` parameters that are appropriate for most use cases. This means that if you don't want to specify custom values for these parameters, you can simply omit them from your code, and therMizer will use the default values instead. This allows you to get started with modelling using just one temperature value at the minimum. Using default values can save you time and effort since you don't need to spend time researching or experimenting with different parameter values. However, if you choose to specify custom values for these parameters, therMizer provides flexibility to do so, allowing you to customize your model to fit your specific research question or study system.
 
 `realm` refers to the vertical realms or depth strata which species inhabit and for which temperatures will be provided. These could be named something like *epipelagic*, *mesopelagic*, *surface*, *bottom*, whatever you want to call them. These realms should be set up as the second dimension (or columns) of `ocean_temp`: one column per realm representing different time series of temperature. By default, if only one vector of temperature is supplied, there will be only one realm.
 
@@ -181,9 +181,9 @@ params <- upgradeTherParams(params,
                             metabolism_effect = TRUE)
                                 
 ```
-Note that `ocean_temp_array` defines the specific time frame for the projection in time that needs to occur in the `project()` function. In particular, the `t_start` argument must be within the range of dates covered by `ocean_temp_array`. Similarly, the end of the simulation is determined by `t_start` + `t_max`, which also needs to be within the range of dates of `ocean_temp_array`.
+Note that `ocean_temp_array` defines the specific time frame for the projection in time that needs to occur in the `project()` function. In particular, the `t_start` argument must be within the range of dates covered by `ocean_temp_array`. Similarly, the length of the simulation is determined by `t_max` in years, which should be set within the range of dates of `ocean_temp_array`. If `t_max` exceeds the length of the temperature time series provided by `ocean_temp_array`, therMizer will cycle through the values of `ocean_temp_array` until reaching the end of the simulation.
 
-Moreover, it is important to note that mizer is based on a yearly time step. If `ocean_temp_array` does not follow yearly time steps, the `dt` argument in the `project()` function must be adjusted accordingly. The `dt` argument specifies the time step size and should be set to the fraction of a year corresponding to the time step used in `ocean_temp_array`. For example, if `ocean_temp_array` provides monthly temperatures, the `dt` value should be set to 1/12, while daily temperatures would require a `dt` of 1/365 or 1/366 for leap years.
+Finally, it is important to note that mizer is based on a yearly time step. If `ocean_temp_array` does not follow yearly time steps, the `dt` argument in the `project()` function must be adjusted accordingly. The `dt` argument specifies the time step size and should be set to the fraction of a year corresponding to the time step used in `ocean_temp_array`. For example, if `ocean_temp_array` provides monthly temperatures, the `dt` value should be set to 1/12, while daily temperatures would require a `dt` of 1/365 or 1/366 for leap years. By default, `dt` is set to 1/10.
 
 Below is an example to use the `project` function with therMizer:
 
@@ -206,6 +206,10 @@ The `plotThermPerformance` function displays the shape of the thermal performanc
 plotThermPerformance(params)
 
 ```
+
+## Calibrating models with therMizer
+
+Mizer functions used to calibrate models often rely on the `project()` function, which cannot be setup to follow a specific time-frame with `t_start` or `t_max` unless you are coding your own calibration functions. Since therMizer will cycle through the values of `ocean_temp_array` indefinitely, it is possible to set up a unique temperature value (or an array of 1 x realms) as `ocean_temp_array`, **without** including dates, to calibrate a model. That way, therMizer will be date independent. Be mindful that once the end of `ocean_temp_array` is reached, thermizer will pick the first temperature value of `ocean_temp_array` again to continue the simulation.
 
 ## Acknowledgements
 
