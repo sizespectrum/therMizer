@@ -69,6 +69,8 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
     parse_order <- ifelse(nchar(date_vec) <= 4, "%Y",
                           ifelse(nchar(date_vec) == 7, "%Y-%m",
                                  "%Y-%m-%d"))
+    # if years only and they are less than 4 char
+    if(parse_order[1] == "%Y" & any(nchar(date_vec) < 4)) date_vec <- str_pad(date_vec, 4, pad = '0')
     date_vec <- parse_date_time(date_vec, orders = parse_order)
     date_vec <- as.numeric(year(date_vec)) + as.numeric(yday(date_vec) - 1) / as.numeric(ifelse(leap_year(date_vec), 366, 365))
 
@@ -83,11 +85,10 @@ upgradeTherParams <- function(params, temp_min = NULL, temp_max = NULL,
     # assuming that the second dimension is realms. If there is an issue with that it will be signaled later
     ## check dimnames
     date_vec <- dimnames(ocean_temp_array)[[1]]
-
-    parse_order <- ifelse(nchar(date_vec) == 4, "%Y",
+    parse_order <- ifelse(nchar(date_vec) <= 4, "%Y",
                           ifelse(nchar(date_vec) == 7, "%Y-%m",
                                  "%Y-%m-%d"))
-
+    if(parse_order[1] == "%Y" & any(nchar(date_vec) < 4)) date_vec <- str_pad(date_vec, 4, pad = '0')
     date_vec <- parse_date_time(date_vec, orders = parse_order)
     date_vec <- as.numeric(year(date_vec)) + as.numeric(yday(date_vec) - 1) / as.numeric(ifelse(leap_year(date_vec), 366, 365))
     dimnames(ocean_temp_array)[[1]] <- date_vec
