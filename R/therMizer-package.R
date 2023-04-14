@@ -9,6 +9,7 @@
 #' @import mizer dplyr ggplot2 assertthat lubridate
 #' @importFrom stats mvfft
 #' @importFrom reshape2 melt
+#' @importFrom stringr str_pad
 #' @md
 #' @keywords internal
 "_PACKAGE"
