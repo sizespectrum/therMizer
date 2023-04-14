@@ -60,8 +60,10 @@ setMetabTher <- function(params){
 #'
 scaled_temp_effect <- function(params, t) {
   # checking that t is within ocean_temp, cycling through otherwise
-  if(!t %in% as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]))
-    t <- t %% length(dimnames(other_params(params)$ocean_temp)[[1]])
+  if(!floor(t) %in% as.numeric(dimnames(other_params(params)$ocean_temp)[[1]]))
+    t <- t %% as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][dim(
+      other_params(params)$ocean_temp)[[1]]]) +
+      as.numeric(dimnames(other_params(params)$ocean_temp)[[1]][1])
 
   scaled_temp_effect_realms <- array(NA, dim = c(dim(other_params(params)$vertical_migration)),
                                      dimnames = c(dimnames(other_params(params)$vertical_migration)))
