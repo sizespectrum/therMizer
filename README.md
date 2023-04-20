@@ -71,7 +71,7 @@ params <- setRateFunction(params,"Encounter","newEncounterFunction")
 
 ## Sample code for preparing parameters and input
 
-Below are examples on how to setup different variables and arrays to use with therMizer. It does not mean you need all of them to run a model. The bare minimum is a mizerParams object, the two temperature range vectors `temp_min` and `temp_max` and finally the temperature array.
+Below are examples on how to setup different variables and arrays to use with therMizer. It does not mean you need all of them to run a model. The bare minimum is a `MizerParams` object, the two temperature range vectors `temp_min` and `temp_max` and finally the temperature array.
 
 Let's create some example species parameters for two fictional species:
 
@@ -82,8 +82,10 @@ params <- newMultispeciesParams(species_params, no_w = 200, kappa = 0.0001) |>
     steady(tol = 0.001)
 
 # Assign them thermal tolerance limits
-species_params(params)$temp_min <- c(-5, 5)
-species_params(params)$temp_max <- c(10, 20)
+temp_min <- c(-5, 5)
+temp_max <- c(10, 20)
+species_params(params)$temp_min <- temp_min
+species_params(params)$temp_max <- temp_max
 ```
 
 Here's an example of how to set up the `vertical_migration` array. We'll assume one species stays in the upper 50 m of the water column until it moves to the bottom at maturity and that all sizes of the other species undergo diel vertical migration (DVM). This will give us four realms.
@@ -167,10 +169,24 @@ for (i in 1:501) {
 
 ## Running a scenario
 
-The `upgradeTherParams` function combines a standard `mizerParams` object with the therMizer objects described above. The only necessary parameters are `temp_min`, `temp_max` and `ocean_temp_array`.
+The `upgradeTherParams` function combines a standard `MizerParams` object with the therMizer objects described above. The **only necessary parameters** (besides the `MizerParams` object) are `temp_min`, `temp_max` and `ocean_temp_array`. When using `upgradeTherParams`:
+
+- `params` is a `MizerParams` object.
+
+- `temp_min` and `temp_max` are vectors of numeric value as long as your number of species.
+
+- `ocean_temp_array` can be a scalar, a vector or an array and contain temperature values. The first dimension (if any) should be time. Each row will be considered as year unless named otherwise (e.g. with dates). The second dimension (if any) corresponds to the different realms and should be named so.
+
+- `n_pp_array` can be a vector or an array and contain background spectra values. It has to have the same time dimension as `ocean_temp_array`. Its second dimension is the number of size bins and it should be the same number of bins as in the `MizerParams` object.  It means that if `ocean_temp_array` is a scalar, `n_pp_array` will be a vector (1 time x sizes) and if `ocean_temp_array` is a vector or array, `n_pp_array` will be an array. Realms of background spectra are not supported.
+
+- `vertical_migration_array` is an array of realms x species x sizes. It means that its first dimension should be the same as `ocean_temp_array` (if `ocean_temp_array` doesn't have realms then it will be dimension of 1). The second dimension must be equal to the number of species in the `MizerParams` object. The third dimension must be equal to the number of size bins in the `MizerParams` object. It contains numeric values from 0 to 1 and the sum across realms per species per size must be 1.
+
+- `exposure_array` is an array of realms x species. It means that its dimensions must be the same as the first 2 dimensions of the `vertical_migration_array`. It contains numeric values from 0 to 1.
+
+- `aerobic_effect` and `metabolism_effect` are switches to enable/disable the effect of temperature on encounter rate and metabolism respectively.
 
 ```r
-params <- upgradeTherParams(params, 
+params <- upgradeTherParams(params = params, 
                             temp_min = temp_min,
                             temp_max = temp_max,
                             ocean_temp_array = ocean_temp_array,
